@@ -37,8 +37,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2347770289817405412}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8429012112299923337
@@ -152,7 +151,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.01701008, y: 0.0010606349}
+  m_Offset: {x: 0.012262657, y: 0.0010606349}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -162,7 +161,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.1291815, y: 0.18385834}
+  m_Size: {x: 0.11968668, y: 0.18385834}
   m_EdgeRadius: 0
 --- !u!50 &4098086214472512097
 Rigidbody2D:
@@ -205,6 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: e86a38c437506bf429842b1b7c714704, type: 2}
   hurtEffect: {fileID: 11400000, guid: bc9d3b7261081204fa236fdc1b9ad4eb, type: 2}
+  healthbar: {fileID: 0}
 --- !u!114 &3535785339030108429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,7 +217,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5afef0f1040a6542ae1693d4006c79e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackPoint: {fileID: 2347770289817405412}
   meleeUnitData: {fileID: 11400000, guid: e86a38c437506bf429842b1b7c714704, type: 2}
 --- !u!114 &7473363820967727092
 MonoBehaviour:
@@ -255,34 +254,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db64e008116a5743a3c31c51f553f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &6215798881942298747
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2347770289817405412}
-  m_Layer: 6
-  m_Name: AttackPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2347770289817405412
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6215798881942298747}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.141, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5467365868704459948}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

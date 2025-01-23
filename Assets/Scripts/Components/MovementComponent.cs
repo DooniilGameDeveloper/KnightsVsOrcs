@@ -27,7 +27,5 @@ public class MovementComponent : MonoBehaviour, IComponent
     protected void Move() 
         => rb.MovePosition(rb.position + direction * 4 * Time.deltaTime);
     public void DisposeComponent()
-    {
-        UnitsSystem.pushUnits -= Push;
-    }
+        => UnitsSystem.pushUnits -= Push;
 }
