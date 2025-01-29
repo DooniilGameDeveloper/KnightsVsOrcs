@@ -6,8 +6,7 @@ public abstract class Unit: MonoBehaviour, IDamageble
     private AttackAction attackAction;
     private MoveAction moveAction;
     private DeadAction deadAction;
-    private DamageHelper damageHelper;
-    [SerializeField] private HurtEffect hurtEffect;
+    private GetDamageHelper damageHelper;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private LayerMask attackLayer;
@@ -48,7 +47,7 @@ public abstract class Unit: MonoBehaviour, IDamageble
         action?.DoAction();
     }
 
-    public void DestroyUnit()
+    public virtual void DestroyUnit()
     {
         Destroy(GetComponent<BoxCollider2D>());
     }
@@ -60,9 +59,9 @@ public abstract class Unit: MonoBehaviour, IDamageble
     public void SetMoveAction()
         => moveAction = new MoveAction(animator, GetComponent<Rigidbody2D>(), direction);
     public void SetDeadAction()
-        => deadAction = new DeadAction(animator, GetComponent<SpriteRenderer>());
+        => deadAction = new DeadAction(animator, spriteRenderer);
     public void SetDamageHelper()
-        => damageHelper = new DamageHelper(spriteRenderer, hurtEffect, this);
+        => damageHelper = new GetDamageHelper(spriteRenderer, this);
 
     // getters / setters
     public float GetHealth()

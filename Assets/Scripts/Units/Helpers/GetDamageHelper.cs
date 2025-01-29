@@ -1,16 +1,16 @@
 using System.Collections;
 using UnityEngine;
 
-public class DamageHelper
+public class GetDamageHelper
 {
     private Coroutine damageCoroutine;
     private SpriteRenderer sp;
     private HurtEffect hE;
     private Unit m;
-    public DamageHelper(SpriteRenderer spriteRenderer, HurtEffect hurtEffect, Unit mono)
+    public GetDamageHelper(SpriteRenderer spriteRenderer, Unit mono)
     {
+        hE = Resources.Load<HurtEffect>("HurtEffect");
         sp = spriteRenderer;
-        hE = hurtEffect;
         m = mono;
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "HurtEffect", menuName = "Effects/HurtEffectDataType")]
+[CreateAssetMenu(fileName = "HurtEffect", menuName = "Effects/HurtEffect")]
 public class HurtEffect : ScriptableObject
 {
     public Material damageMaterial;

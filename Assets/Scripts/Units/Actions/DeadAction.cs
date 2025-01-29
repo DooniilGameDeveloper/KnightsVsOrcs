@@ -13,6 +13,7 @@ public class DeadAction : IAction
 
     public void DoAction()
     {
+        
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Death") 
             || animator.GetCurrentAnimatorStateInfo(0).IsName("Body")) return;
         animator.SetTrigger("Death");
