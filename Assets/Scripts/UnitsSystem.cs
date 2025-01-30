@@ -4,8 +4,13 @@ using UnityEngine;
 public class UnitsSystem : MonoBehaviour
 {
     public Transform spawnPoint;
-    public GameObject meleeUnit;
+    private Creator unitCreator;
     static public event Action pushUnits;
+
+    void Awake()
+    {
+        unitCreator = new OrcCreator();
+    }
 
     public void Push()
     {
@@ -14,11 +19,6 @@ public class UnitsSystem : MonoBehaviour
 
     public void AddMeleeUnit()
     {
-        AddUnit(meleeUnit);
-    }
-
-    private void AddUnit(GameObject unit) 
-    {
-        Instantiate(unit, spawnPoint);
+        unitCreator.FactoryMethod();
     }
 }

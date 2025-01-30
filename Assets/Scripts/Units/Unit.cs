@@ -2,31 +2,39 @@ using UnityEngine;
 
 public abstract class Unit: MonoBehaviour, IDamageble
 {
+    #region Property
     private IAction action;
-    private AttackAction attackAction;
-    private MoveAction moveAction;
-    private DeadAction deadAction;
-    private GetDamageHelper damageHelper;
-    private Animator animator;
-    private SpriteRenderer spriteRenderer;
+    protected AttackAction attackAction;
+    protected MoveAction moveAction;
+    protected DeadAction deadAction;
+    protected GetDamageHelper damageHelper;
+    protected Animator animator;
+    protected SpriteRenderer spriteRenderer;
     private LayerMask attackLayer;
-    private Vector2 direction;
-    [SerializeField] private float range = 2f;
-    [SerializeField] private float maxHealth = 100f;
+    protected Vector2 direction;
+    private bool isJustSpawned;
+    private float range = 2f;
+    private float maxHealth = 100f;
     private float currentHealth = 100f;
-    [SerializeField] private float damage = 25f;
+    private float damage = 25f;
+    #endregion
     void Awake()
     {
-        attackLayer = CompareTag("EnemyUnits") ? LayerMask.GetMask("Player") : LayerMask.GetMask("Enemies");
-        direction = CompareTag("EnemyUnits") ? new(-1, 0) : new(1, 0);
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        InitActions();
-        InitHelpers();
     }
 
-    protected abstract void InitActions();
-    protected abstract void InitHelpers();
+    public virtual void Init(float actionRange, float health, float damageValue, bool isPlayer)
+    {
+        range = actionRange;
+        maxHealth = health;
+        damage = damageValue;
+        direction = isPlayer ? new(1, 0) : new(-1, 0);
+        attackLayer = isPlayer ? LayerMask.GetMask("Enemies") : LayerMask.GetMask("Player");
+        isJustSpawned = true;
+        spriteRenderer.flipX = !isPlayer;
+    }
+
 
     void FixedUpdate()
     {
@@ -40,7 +48,7 @@ public abstract class Unit: MonoBehaviour, IDamageble
                 attackAction.SetEnemies(enemies);
                 action = attackAction ?? null;
             }
-            else
+            else if (!isJustSpawned)
                 action = moveAction ?? null;
         }    
 
@@ -51,17 +59,7 @@ public abstract class Unit: MonoBehaviour, IDamageble
     {
         Destroy(GetComponent<BoxCollider2D>());
     }
-    
-    // TODO: Move own script
-    // Init Action and helpers
-    public void SetMeleeAttackAction()
-        => attackAction = new MeleeAttack(animator);
-    public void SetMoveAction()
-        => moveAction = new MoveAction(animator, GetComponent<Rigidbody2D>(), direction);
-    public void SetDeadAction()
-        => deadAction = new DeadAction(animator, spriteRenderer);
-    public void SetDamageHelper()
-        => damageHelper = new GetDamageHelper(spriteRenderer, this);
+
 
     // getters / setters
     public float GetHealth()
