@@ -1,65 +1,82 @@
 using UnityEngine;
 
-public class Unit: MonoBehaviour, IDamageble, IAttack
+public abstract class Unit: MonoBehaviour, IDamageble
 {
-    #region Properties
-    protected Animator animator;
+    private IAction action;
+    private AttackAction attackAction;
+    private MoveAction moveAction;
+    private DeadAction deadAction;
+    private GetDamageHelper damageHelper;
+    private Animator animator;
     private SpriteRenderer spriteRenderer;
-    public HealthComponent healthComponent { get; private set; }
-    private MovementComponent movementComponent;
-    private AttackComponent attackComponent;
-    #endregion
-
-    #region InitMethods
-    void Awake() => UnitAwake();
-    protected virtual void UnitAwake()
+    private LayerMask attackLayer;
+    private Vector2 direction;
+    [SerializeField] private float range = 2f;
+    [SerializeField] private float maxHealth = 100f;
+    private float currentHealth = 100f;
+    [SerializeField] private float damage = 25f;
+    void Awake()
     {
-        if (TryGetComponent(out Animator an)) 
-            animator = an;
+        attackLayer = CompareTag("EnemyUnits") ? LayerMask.GetMask("Player") : LayerMask.GetMask("Enemies");
+        direction = CompareTag("EnemyUnits") ? new(-1, 0) : new(1, 0);
+        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (TryGetComponent(out HealthComponent hc)) 
-        {
-            healthComponent = hc;
-            healthComponent.InitComponent();
-            healthComponent.OnDead += GetDead;
-        }
-        if (TryGetComponent(out AttackComponent ac)) 
-        {
-            attackComponent = ac;
-            attackComponent.InitComponent();
-        }
-        if (TryGetComponent(out MovementComponent mc)) 
-        {
-            movementComponent = mc;
-            movementComponent.InitComponent();
-        }
+        InitActions();
+        InitHelpers();
     }
-    #endregion
-    #region IDamagable
-    public virtual void GetDead()
+
+    protected abstract void InitActions();
+    protected abstract void InitHelpers();
+
+    void FixedUpdate()
     {
-        animator.SetTrigger("Death");
-        spriteRenderer.sortingLayerID = SortingLayer.NameToID("Dead");
-    }
-    public void GetDamage(float damage) 
-        => healthComponent.Hurt(damage);
-    #endregion
-    #region IAttack
-    public void Attack(Collider2D unit, float damage) 
-    {
-        if (healthComponent != null && !healthComponent.IsDead())
+        if (currentHealth <= 0 && deadAction != null)
+            action = deadAction;
+        else 
         {
-            animator.SetTrigger("Attack");
-            unit.GetComponent<IDamageble>().GetDamage(damage);
-        }
+            var enemies = Physics2D.RaycastAll(transform.position, direction, range, attackLayer);
+            if (enemies.Length != 0)
+            {
+                attackAction.SetEnemies(enemies);
+                action = attackAction ?? null;
+            }
+            else
+                action = moveAction ?? null;
+        }    
+
+        action?.DoAction();
     }
-    #endregion
-    #region Common methods
-    public void DestroyUnit()
+
+    public virtual void DestroyUnit()
     {
-        movementComponent.DisposeComponent();
-        healthComponent.OnDead -= GetDead;
         Destroy(GetComponent<BoxCollider2D>());
     }
-    #endregion
+    
+    // TODO: Move own script
+    // Init Action and helpers
+    public void SetMeleeAttackAction()
+        => attackAction = new MeleeAttack(animator);
+    public void SetMoveAction()
+        => moveAction = new MoveAction(animator, GetComponent<Rigidbody2D>(), direction);
+    public void SetDeadAction()
+        => deadAction = new DeadAction(animator, spriteRenderer);
+    public void SetDamageHelper()
+        => damageHelper = new GetDamageHelper(spriteRenderer, this);
+
+    // getters / setters
+    public float GetHealth()
+        => currentHealth;
+    public void SetHealth(float value)
+    {
+        if (value < 0)
+        {
+            Debug.LogError("Health cannot be negative");
+            return;
+        }
+        currentHealth = value;
+    }
+    public float GetDamageValue()
+        => damage;
+    public void GetDamage()
+        => damageHelper.GetDamage();
 }

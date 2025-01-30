@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3289231987874193004}
   - component: {fileID: 7631899393883374213}
-  - component: {fileID: -2483080656881666887}
   - component: {fileID: 5587306635136704780}
   - component: {fileID: 3538197833172842084}
   m_Layer: 0
@@ -90,20 +89,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-2483080656881666887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3050013530857784990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3994df66a3ca55e4e99b2d10cd8fca33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unit: {fileID: 0}
-  hurtEffect: {fileID: 11400000, guid: bc9d3b7261081204fa236fdc1b9ad4eb, type: 2}
 --- !u!61 &5587306635136704780
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -162,3 +147,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db64e008116a5743a3c31c51f553f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  damage: 25

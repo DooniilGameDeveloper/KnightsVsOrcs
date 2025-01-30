@@ -13,11 +13,7 @@ GameObject:
   - component: {fileID: 7287100837315084225}
   - component: {fileID: 8438318478901649764}
   - component: {fileID: 1467875061682836643}
-  - component: {fileID: 1848204666335605560}
-  - component: {fileID: -3467350419097240605}
-  - component: {fileID: 3410845913168388530}
-  - component: {fileID: 5396952913271066468}
-  - component: {fileID: 7184128980415927903}
+  - component: {fileID: 7119396123846687157}
   m_Layer: 3
   m_Name: Orc
   m_TagString: EnemyUnits
@@ -190,7 +186,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1848204666335605560
+--- !u!114 &7119396123846687157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,58 +195,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441608822573569112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3994df66a3ca55e4e99b2d10cd8fca33, type: 3}
+  m_Script: {fileID: 11500000, guid: 4be70d5dc726b7c4c93a5c21b14334d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unit: {fileID: 11400000, guid: fdcfc9519a7b6384c934ac75ee58166b, type: 2}
   hurtEffect: {fileID: 11400000, guid: bc9d3b7261081204fa236fdc1b9ad4eb, type: 2}
-  healthbar: {fileID: 0}
---- !u!114 &-3467350419097240605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5441608822573569112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5afef0f1040a6542ae1693d4006c79e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  meleeUnitData: {fileID: 11400000, guid: fdcfc9519a7b6384c934ac75ee58166b, type: 2}
---- !u!114 &3410845913168388530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5441608822573569112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa65b6426b0803458c0f5fd7065c0f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5396952913271066468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5441608822573569112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8ce4fcd7e813d7468e92f64deebe6f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7184128980415927903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5441608822573569112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4db64e008116a5743a3c31c51f553f4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  range: 2
+  maxHealth: 100
+  damage: 25
