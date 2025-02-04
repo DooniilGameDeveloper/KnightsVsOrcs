@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public abstract class AttackAction : IAction
@@ -6,10 +7,12 @@ public abstract class AttackAction : IAction
     private float timeBtwAttack = 0f;
     private float cooldawnAttack = 1f;
     private Animator animator;
+    private string animationName;
 
-    public AttackAction(Animator unitAnimator)
+    public AttackAction(Animator unitAnimator, string animationTypeName)
     {
         animator = unitAnimator;
+        animationName = animationTypeName;
     }
 
     public void SetEnemies(RaycastHit2D[] units) 
@@ -20,6 +23,7 @@ public abstract class AttackAction : IAction
         if (timeBtwAttack <= 0f) 
         {
             animator.SetTrigger("Attack");
+            animator.SetTrigger(animationName);
             DamageMethod();
             timeBtwAttack = cooldawnAttack;
         }

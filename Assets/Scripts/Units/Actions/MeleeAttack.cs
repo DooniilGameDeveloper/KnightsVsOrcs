@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MeleeAttack : AttackAction
 {
-    public MeleeAttack(Animator unitAnimator) : base(unitAnimator) {}
+    public MeleeAttack(Animator unitAnimator, string animationTypeName) : base(unitAnimator, animationTypeName) {}
     
     protected override void DamageMethod() 
     {

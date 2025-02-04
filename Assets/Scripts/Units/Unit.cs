@@ -11,7 +11,7 @@ public abstract class Unit: MonoBehaviour, IDamageble
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
     private LayerMask attackLayer;
-    protected Vector2 direction;
+    public Vector2 direction;
     private bool isJustSpawned;
     private float range = 2f;
     private float maxHealth = 100f;

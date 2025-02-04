@@ -1,15 +1,16 @@
 using System;
+using Units.Factories;
 using UnityEngine;
 
 public class UnitsSystem : MonoBehaviour
 {
     public Transform spawnPoint;
-    private Creator unitCreator;
+    private UnitFactory unitUnitFactory;
     static public event Action pushUnits;
 
     void Awake()
     {
-        unitCreator = new OrcCreator();
+        unitUnitFactory = new OrcUnitFactory();
     }
 
     public void Push()
@@ -19,6 +20,6 @@ public class UnitsSystem : MonoBehaviour
 
     public void AddMeleeUnit()
     {
-        unitCreator.FactoryMethod();
+        unitUnitFactory.CreateLightMeleeUnit();
     }
 }
