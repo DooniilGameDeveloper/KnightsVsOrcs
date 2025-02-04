@@ -1,4 +1,5 @@
 using System.Collections;
+using Units;
 using UnityEngine;
 
 public class GetDamageHelper
@@ -32,10 +33,10 @@ public class GetDamageHelper
 
     public void GetDamage() 
     {
-        var healthDamaged = m.GetHealth() - m.GetDamageValue();
-        if (m.GetHealth() > healthDamaged)
+        var healthDamaged = m.Health - m.GetDamageValue();
+        if (m.Health > healthDamaged)
         {
-            m.SetHealth(healthDamaged);
+            m.Health = healthDamaged;
             ShowHurtEffect();
         }   
     }

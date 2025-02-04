@@ -1,80 +1,43 @@
 using UnityEngine;
 
-public abstract class Unit: MonoBehaviour, IDamageble
+namespace Units
 {
-    #region Property
-    private IAction action;
-    protected AttackAction attackAction;
-    protected MoveAction moveAction;
-    protected DeadAction deadAction;
-    protected GetDamageHelper damageHelper;
-    protected Animator animator;
-    protected SpriteRenderer spriteRenderer;
-    private LayerMask attackLayer;
-    public Vector2 direction;
-    private bool isJustSpawned;
-    private float range = 2f;
-    private float maxHealth = 100f;
-    private float currentHealth = 100f;
-    private float damage = 25f;
-    #endregion
-    void Awake()
+    public abstract class Unit: MonoBehaviour
     {
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
+        #region Property
+        protected Animator Animator;
+        protected SpriteRenderer SpriteRenderer;
+        protected float Damage;
+        // private bool isJustSpawned;
+        //
+        // public float Health
+        // {
+        //     get => currentHealth;
+        //     set
+        //     {
+        //         if (value < 0)
+        //             throw new InvalidDataException("[Unit->Health] Value can't be negative");
+        //         currentHealth -= value;
+        //         if (currentHealth <= 0)
+        //             DestroyUnit();
+        //     }
+        // }
+        
+        #endregion
 
-    public virtual void Init(float actionRange, float health, float damageValue, bool isPlayer)
-    {
-        range = actionRange;
-        maxHealth = health;
-        damage = damageValue;
-        direction = isPlayer ? new(1, 0) : new(-1, 0);
-        attackLayer = isPlayer ? LayerMask.GetMask("Enemies") : LayerMask.GetMask("Player");
-        isJustSpawned = true;
-        spriteRenderer.flipX = !isPlayer;
-    }
-
-
-    void FixedUpdate()
-    {
-        if (currentHealth <= 0 && deadAction != null)
-            action = deadAction;
-        else 
+        private void Awake()
         {
-            var enemies = Physics2D.RaycastAll(transform.position, direction, range, attackLayer);
-            if (enemies.Length != 0)
-            {
-                attackAction.SetEnemies(enemies);
-                action = attackAction ?? null;
-            }
-            else if (!isJustSpawned)
-                action = moveAction ?? null;
-        }    
-
-        action?.DoAction();
-    }
-
-    public virtual void DestroyUnit()
-    {
-        Destroy(GetComponent<BoxCollider2D>());
-    }
-
-
-    // getters / setters
-    public float GetHealth()
-        => currentHealth;
-    public void SetHealth(float value)
-    {
-        if (value < 0)
-        {
-            Debug.LogError("Health cannot be negative");
-            return;
+            Animator = GetComponent<Animator>();
+            SpriteRenderer = GetComponent<SpriteRenderer>();
         }
-        currentHealth = value;
+
+        protected abstract void HurtEnemy(RaycastHit2D enemy);
+
+        // public void DestroyUnit()
+        // {
+        //     Destroy(GetComponent<BoxCollider2D>());
+        //     animator.SetTrigger("Death");
+        //     spriteRenderer.sortingLayerID = SortingLayer.NameToID("Dead");
+        // }
     }
-    public float GetDamageValue()
-        => damage;
-    public void GetDamage()
-        => damageHelper.GetDamage();
 }

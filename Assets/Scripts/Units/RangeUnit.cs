@@ -1,6 +1,6 @@
 ﻿namespace Units
 {
-    public class RangeUnit : Unit
+    public class RangeUnit : MovementUnit
     {
         
     }
