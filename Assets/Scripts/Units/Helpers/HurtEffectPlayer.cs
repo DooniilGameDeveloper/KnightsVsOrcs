@@ -2,20 +2,20 @@ using System.Collections;
 using Units;
 using UnityEngine;
 
-public class GetDamageHelper
+public class HurtEffectPlayer
 {
     private Coroutine damageCoroutine;
-    private SpriteRenderer sp;
-    private HurtEffect hE;
-    private Unit m;
-    public GetDamageHelper(SpriteRenderer spriteRenderer, Unit mono)
+    private readonly SpriteRenderer sp;
+    private readonly HurtEffect hE;
+    private readonly Unit m;
+    public HurtEffectPlayer(Unit unit)
     {
         hE = Resources.Load<HurtEffect>("HurtEffect");
-        sp = spriteRenderer;
-        m = mono;
+        sp = unit.GetSpriteRenderer();
+        m = unit;
     }
 
-    private void ShowHurtEffect()
+    public void Play()
     {
         if (damageCoroutine != null)
             m.StopCoroutine(damageCoroutine);
@@ -29,15 +29,5 @@ public class GetDamageHelper
             sp.material.SetFloat("_FlashIntensity", 0f);
             damageCoroutine = null;
         }
-    }
-
-    public void GetDamage() 
-    {
-        var healthDamaged = m.Health - m.GetDamageValue();
-        if (m.Health > healthDamaged)
-        {
-            m.Health = healthDamaged;
-            ShowHurtEffect();
-        }   
     }
 }

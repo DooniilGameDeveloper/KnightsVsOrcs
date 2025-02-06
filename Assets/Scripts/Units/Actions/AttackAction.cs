@@ -22,7 +22,6 @@ public abstract class AttackAction : IAction
     {
         if (timeBtwAttack <= 0f) 
         {
-            animator.SetTrigger("Attack");
             animator.SetTrigger(animationName);
             DamageMethod();
             timeBtwAttack = cooldawnAttack;

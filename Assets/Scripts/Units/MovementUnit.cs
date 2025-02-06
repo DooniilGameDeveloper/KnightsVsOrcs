@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Units
 {
-    public abstract class MovementUnit : Unit, IDamageble
+    public abstract class MovementUnit : Unit
     {
+        #region Property
+
         private float rangeAttack;
-        private float currentHealth;
         private LayerMask attackLayer;
         private Vector2 movementDirection;
+        private HurtEffectPlayer hurtEffectPlayer;
+
+        #endregion
         
         public void Init(float attackRange, float health, float damageValue, bool isPlayer)
         {
             rangeAttack = attackRange;
-            currentHealth = health;
+            CurrentHealth = health;
+            MaxHealth = health;
             Damage = damageValue;
             movementDirection = isPlayer 
                 ? new Vector2(1, 0) 
@@ -21,26 +28,51 @@ namespace Units
                 ? LayerMask.GetMask("Enemies") 
                 : LayerMask.GetMask("Player");
             SpriteRenderer.flipX = !isPlayer;
+            hurtEffectPlayer = new HurtEffectPlayer(this);
         }
         
+        // TODO: Add Attack method
         private void FixedUpdate()
         {
-            var enemies = Physics2D.RaycastAll(transform.position, movementDirection, rangeAttack, attackLayer);
-            if (enemies.Length != 0)
+            foreach (var enemyCollider2D in GetEnemiesCollider2D())
             {
-                foreach(var enemy in enemies)
-                    HurtEnemy(enemy);
+                var isHurtEnemy = TryHurtEnemy(enemyCollider2D, out var unitComponent);
+                if (isHurtEnemy)
+                {
+                    PlayHurtEffect(unitComponent);
+                    CheckAlive(unitComponent);
+                }
             }
         }
-
-        protected override void HurtEnemy(RaycastHit2D enemy)
+        
+        private bool TryHurtEnemy(Collider2D enemyCollider2D, out MovementUnit unitComponent)
         {
-            enemy.transform.GetComponent<IDamageble>().GetDamage();
+            if (Damage <= 0)
+            {
+                unitComponent = null;
+                return false;
+            }
+            
+            unitComponent = enemyCollider2D.GetComponent<MovementUnit>();
+            GetDamage(unitComponent, Damage);
+            return true;
+        }
+            
+        protected override IEnumerable<Collider2D> GetEnemiesCollider2D()
+        {
+            return Physics2D.RaycastAll(transform.position, movementDirection, rangeAttack, attackLayer)
+                .Select(e => e.collider);
+        }
+        private static void GetDamage(MovementUnit unitComponent, float damage)
+        {
+            unitComponent.CurrentHealth -= damage;
         }
 
-        public void GetDamage()
-        {
-            throw new System.NotImplementedException();
+        private static void PlayHurtEffect(MovementUnit unitComponent)
+        { 
+            unitComponent.hurtEffectPlayer.Play();
         }
+        
+        // TODO: Move PlayHurtEffect, GetDamage, CheckAlive and Die to interface
     }
 }

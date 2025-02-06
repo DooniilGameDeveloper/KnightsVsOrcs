@@ -1,43 +1,43 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Units
 {
     public abstract class Unit: MonoBehaviour
     {
-        #region Property
-        protected Animator Animator;
+        #region Property and get / set methods
+        
+        private Animator animator;
         protected SpriteRenderer SpriteRenderer;
         protected float Damage;
+        protected float CurrentHealth;
+        protected float MaxHealth;
         // private bool isJustSpawned;
-        //
-        // public float Health
-        // {
-        //     get => currentHealth;
-        //     set
-        //     {
-        //         if (value < 0)
-        //             throw new InvalidDataException("[Unit->Health] Value can't be negative");
-        //         currentHealth -= value;
-        //         if (currentHealth <= 0)
-        //             DestroyUnit();
-        //     }
-        // }
+        
+        public SpriteRenderer GetSpriteRenderer()
+            => SpriteRenderer;
         
         #endregion
 
         private void Awake()
         {
-            Animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
             SpriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        protected abstract void HurtEnemy(RaycastHit2D enemy);
+        protected abstract IEnumerable<Collider2D> GetEnemiesCollider2D();
 
-        // public void DestroyUnit()
-        // {
-        //     Destroy(GetComponent<BoxCollider2D>());
-        //     animator.SetTrigger("Death");
-        //     spriteRenderer.sortingLayerID = SortingLayer.NameToID("Dead");
-        // }
+        private void Die()
+        {
+            if (TryGetComponent(out BoxCollider2D boxCollider2D))
+                Destroy(boxCollider2D);
+            animator.SetTrigger("Death");
+            SpriteRenderer.sortingLayerID = SortingLayer.NameToID("Dead");
+        }
+        protected static void CheckAlive(Unit unit)
+        {
+            if (unit.CurrentHealth <= 0)
+                unit.Die();
+        }
     }
 }
