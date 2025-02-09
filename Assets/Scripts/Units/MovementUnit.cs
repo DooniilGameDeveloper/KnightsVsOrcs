@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -12,15 +13,19 @@ namespace Units
         private LayerMask attackLayer;
         private Vector2 movementDirection;
         private HurtEffectPlayer hurtEffectPlayer;
+        private string attackAnimationName;
+        private bool isAllowMoving;
+        protected event Action OnGetDamaged; 
 
         #endregion
         
-        public void Init(float attackRange, float health, float damageValue, bool isPlayer)
+        public void Init(float attackRange, float health, float damageValue, string attackName, bool isPlayer)
         {
             rangeAttack = attackRange;
             CurrentHealth = health;
             MaxHealth = health;
             Damage = damageValue;
+            isAllowMoving = false;
             movementDirection = isPlayer 
                 ? new Vector2(1, 0) 
                 : new Vector2(-1, 0);
@@ -29,50 +34,68 @@ namespace Units
                 : LayerMask.GetMask("Player");
             SpriteRenderer.flipX = !isPlayer;
             hurtEffectPlayer = new HurtEffectPlayer(this);
+            attackAnimationName = attackName;
+            
+            OnGetDamaged += PlayHurtEffect;
+            OnGetDamaged += () =>
+            {
+                if (!CheckAlive())
+                    Die();
+            };
         }
         
-        // TODO: Add Attack method
+        // TODO: Add timeBtwAttack
         private void FixedUpdate()
         {
-            foreach (var enemyCollider2D in GetEnemiesCollider2D())
+            var enemiesColliders = GetEnemiesCollider2D();
+            if (enemiesColliders.Any())
             {
-                var isHurtEnemy = TryHurtEnemy(enemyCollider2D, out var unitComponent);
-                if (isHurtEnemy)
+                foreach (var enemyCollider2D in enemiesColliders)
                 {
-                    PlayHurtEffect(unitComponent);
-                    CheckAlive(unitComponent);
+                    PlayAnimationByNameOnce(attackAnimationName);
+                    HurtEnemy(Damage, enemyCollider2D.GetComponent<MovementUnit>());
                 }
             }
-        }
-        
-        private bool TryHurtEnemy(Collider2D enemyCollider2D, out MovementUnit unitComponent)
-        {
-            if (Damage <= 0)
+            else
             {
-                unitComponent = null;
-                return false;
+                Move();
             }
-            
-            unitComponent = enemyCollider2D.GetComponent<MovementUnit>();
-            GetDamage(unitComponent, Damage);
-            return true;
         }
             
-        protected override IEnumerable<Collider2D> GetEnemiesCollider2D()
+        protected override IList<Collider2D> GetEnemiesCollider2D()
         {
             return Physics2D.RaycastAll(transform.position, movementDirection, rangeAttack, attackLayer)
-                .Select(e => e.collider);
-        }
-        private static void GetDamage(MovementUnit unitComponent, float damage)
-        {
-            unitComponent.CurrentHealth -= damage;
+                .Select(e => e.collider).ToList();
         }
 
-        private static void PlayHurtEffect(MovementUnit unitComponent)
-        { 
-            unitComponent.hurtEffectPlayer.Play();
+        private void Move()
+        {
+            if (!isAllowMoving) 
+                return;
+            PlayAnimationByName(UnitAnimationNames.Moving);
+            Rigidbody2D.MovePosition(Rigidbody2D.position + movementDirection * (4 * Time.deltaTime));
         }
+        private static void HurtEnemy(float damage, MovementUnit enemyComponent)
+        {
+            enemyComponent.CurrentHealth -= damage;
+            enemyComponent.OnGetDamaged?.Invoke();
+        }
+
+        public void AllowMoving()
+            => isAllowMoving = true;
         
-        // TODO: Move PlayHurtEffect, GetDamage, CheckAlive and Die to interface
+        private void PlayHurtEffect()
+            => hurtEffectPlayer.Play();
+        
+        private bool CheckAlive()
+            => CurrentHealth > 0;
+        
+        private void Die()
+        {
+            if (TryGetComponent(out BoxCollider2D boxCollider2D))
+                Destroy(boxCollider2D);
+            PlayAnimationByNameOnce(UnitAnimationNames.Death);
+            SpriteRenderer.sortingLayerID = SortingLayer.NameToID("Dead");
+        }
     }
 }

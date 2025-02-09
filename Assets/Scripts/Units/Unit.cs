@@ -9,10 +9,11 @@ namespace Units
         
         private Animator animator;
         protected SpriteRenderer SpriteRenderer;
+        protected Rigidbody2D Rigidbody2D;
+        
         protected float Damage;
         protected float CurrentHealth;
         protected float MaxHealth;
-        // private bool isJustSpawned;
         
         public SpriteRenderer GetSpriteRenderer()
             => SpriteRenderer;
@@ -23,21 +24,13 @@ namespace Units
         {
             animator = GetComponent<Animator>();
             SpriteRenderer = GetComponent<SpriteRenderer>();
+            Rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
-        protected abstract IEnumerable<Collider2D> GetEnemiesCollider2D();
-
-        private void Die()
-        {
-            if (TryGetComponent(out BoxCollider2D boxCollider2D))
-                Destroy(boxCollider2D);
-            animator.SetTrigger("Death");
-            SpriteRenderer.sortingLayerID = SortingLayer.NameToID("Dead");
-        }
-        protected static void CheckAlive(Unit unit)
-        {
-            if (unit.CurrentHealth <= 0)
-                unit.Die();
-        }
+        protected abstract IList<Collider2D> GetEnemiesCollider2D();
+        protected void PlayAnimationByNameOnce(string animationName)
+            => animator.SetTrigger(animationName);
+        protected void PlayAnimationByName(string animationName)
+            => animator.SetBool(animationName, !animator.GetBool(animationName));
     }
 }

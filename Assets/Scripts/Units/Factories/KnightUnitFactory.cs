@@ -9,7 +9,7 @@ namespace Units.Factories
             var prefab = Resources.Load("Prefabs/MeleeKnight");
             var go = GameObject.Instantiate(prefab) as GameObject;
             var unitComponent = go.AddComponent<LightMeleeUnit>();
-            unitComponent.Init(2.5f, 100f, 25f, true);
+            unitComponent.Init(2.5f, 100f, 25f, UnitAttackAnimationNames.LightAttack, true);
             return unitComponent;
         }
 

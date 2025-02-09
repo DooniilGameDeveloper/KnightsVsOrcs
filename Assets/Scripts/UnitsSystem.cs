@@ -10,7 +10,7 @@ public class UnitsSystem : MonoBehaviour
 
     void Awake()
     {
-        unitUnitFactory = new OrcUnitFactory();
+        unitUnitFactory = new KnightUnitFactory();
     }
 
     public void Push()
