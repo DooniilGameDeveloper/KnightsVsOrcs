@@ -3,7 +3,6 @@ using UnityEngine;
 
 public abstract class AttackAction : IAction
 {
-    protected RaycastHit2D[] enemies;
     private float timeBtwAttack = 0f;
     private float cooldawnAttack = 1f;
     private Animator animator;
@@ -14,9 +13,6 @@ public abstract class AttackAction : IAction
         animator = unitAnimator;
         animationName = animationTypeName;
     }
-
-    public void SetEnemies(RaycastHit2D[] units) 
-        => enemies = units;
 
     public void DoAction()
     {
@@ -30,5 +26,10 @@ public abstract class AttackAction : IAction
             timeBtwAttack -= Time.deltaTime;
     }
 
+    // Принимает название анимации и секунд задержки
     protected abstract void DamageMethod();
+    // Запустить анимацию 
+    // Подождать N секунд перед ударом
+    // Перед ударом проверить, жив юнит или нет
+    // Если не жив -> завершить коррутину
 }
